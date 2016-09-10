@@ -16,6 +16,8 @@ delivr.prepare = (option) => {
         throw new Error('A bucket name is required to upload build files.');
     }
 
+    const willDeploy = Boolean(config.deploy || (typeof config.deploy === 'undefined' && process.env.CI));
+
     const awsClient = new Scube({
         bucket : config.bucket
     });
@@ -27,6 +29,10 @@ delivr.prepare = (option) => {
             return {
                 path : dir.path,
                 finalize() {
+                    if (!willDeploy) {
+                        return dir.finalize();
+                    }
+
                     return dir.finalize()
                         .then(() => {
                             return buildFiles.latest(buildConfig);

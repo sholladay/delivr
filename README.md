@@ -78,7 +78,14 @@ The version to use, instead of asking [build-version](https://github.com/shollad
 
 Type: `string`
 
-The bucket name to use for uploading the build files to S3.
+The bucket name to use for deploying the build files to S3.
+
+##### deploy
+
+Type: `boolean`
+Default: `true` if running in CI
+
+Whether to deploy the build files to S3.
 
 ## Related
 

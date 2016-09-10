@@ -48,6 +48,8 @@
     "integrations",
     "delivery",
     "deliveries",
+    "upload",
+    "deploy",
     "deployment",
     "deployments",
     "ci",
