@@ -1,0 +1,66 @@
+{
+  "name": "delivr",
+  "version": "0.0.0",
+  "description": "Build your code and ship it to S3.",
+  "homepage": "https://github.com/sholladay/delivr",
+  "main": "index.js",
+  "author": {
+    "name": "Seth Holladay",
+    "url": "http://seth-holladay.com",
+    "email": "me@seth-holladay.com"
+  },
+  "scripts": {
+    "test": "xo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sholladay/delivr.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sholladay/delivr/issues",
+    "email": "me@seth-holladay.com"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "license": "MPL-2.0",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "build-data": "^0.3.1",
+    "build-dir": "^0.7.1",
+    "build-files": "^0.1.1",
+    "scube": "^0.1.0"
+  },
+  "devDependencies": {
+    "eslint-config-tidy": "^0.3.0",
+    "xo": "^0.16.0"
+  },
+  "keywords": [
+    "auto",
+    "automatic",
+    "automated",
+    "build",
+    "builds",
+    "continuous",
+    "integration",
+    "integrations",
+    "delivery",
+    "deliveries",
+    "deployment",
+    "deployments",
+    "ci",
+    "cd",
+    "AWS",
+    "S3",
+    "process",
+    "processes",
+    "tool",
+    "tools",
+    "tooling"
+  ],
+  "xo": {
+    "extend": "tidy"
+  }
+}
