@@ -23,6 +23,21 @@ Get it into your program.
 const delivr = require('delivr');
 ```
 
+Run the build.
+
+```js
+delivr.prepare().then((build) => {
+    // Put stuff in here:
+    console.log('Temp dir:', build.path);
+
+    // ... some time later ...
+
+    // Move the temp dir to its permanent home, set up symlinks,
+    // and upload the files on disk to S3.
+    return build.finalize();
+});
+```
+
 ## API
 
 Please see Amazon's [API documentation](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html) for details on bucket names and authenticating with AWS.
@@ -64,6 +79,17 @@ The version to use, instead of asking [build-version](https://github.com/shollad
 Type: `string`
 
 The bucket name to use for uploading the build files to S3.
+
+## Related
+
+ - [scube](https://github.com/sholladay/scube) - Manage your S3 buckets.
+ - [build-files](https://github.com/sholladay/build-files) - Read the files from your build.
+ - [build-keys](https://github.com/sholladay/build-keys) - Get the paths of files from your build.
+ - [build-dir](https://github.com/sholladay/build-dir) - Get a place to put your build.
+ - [build-data](https://github.com/sholladay/build-data) - Get metadata for your build.
+ - [build-path](https://github.com/sholladay/build-path) - Get a path for the given build.
+ - [build-version](https://github.com/sholladay/build-version) - Get a version for your build.
+ - [branch-name](https://github.com/sholladay/branch-name) - Get the current branch name.
 
 ## Contributing
 
