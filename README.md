@@ -82,7 +82,7 @@ The bucket name to use for deploying the build files to S3.
 
 ##### deploy
 
-Type: `boolean`
+Type: `boolean`<br>
 Default: `true` if running in CI
 
 Whether to deploy the build files to S3.
