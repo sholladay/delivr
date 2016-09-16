@@ -44,12 +44,17 @@ delivr.prepare = (option) => {
                                     body : file.content
                                 });
                             };
-                            return awsClient.deleteDir({
-                                prefix : path.posix.join(data.branch, data.version)
-                            })
-                                .then(() => {
-                                    return Promise.all(files.map(uploadFile));
-                                });
+
+                            return Promise.all([
+                                awsClient.deleteDir({
+                                    prefix : path.posix.join(data.branch, data.version)
+                                }),
+                                awsClient.deleteDir({
+                                    prefix : path.posix.join(data.branch, 'latest')
+                                })
+                            ]).then(() => {
+                                return Promise.all(files.map(uploadFile));
+                            });
                         });
                 }
             };
