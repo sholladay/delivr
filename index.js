@@ -5,6 +5,8 @@ const buildFiles = require('build-files');
 const buildDir = require('build-dir');
 const buildData = require('build-data');
 const Scube = require('scube');
+const contentType = require('./lib/content-type');
+const maxAge = require('./lib/max-age');
 
 const delivr = {};
 
@@ -39,10 +41,18 @@ delivr.prepare = (option) => {
                         })
                         .then((files) => {
                             const uploadFile = (file) => {
-                                return awsClient.upload({
-                                    key  : file.path,
-                                    body : file.content
-                                });
+                                const payload = {
+                                    key          : file.path,
+                                    body         : file.content,
+                                    aCL          : 'public-read',
+                                    cacheControl : 'public, max-age=' + maxAge(file.path)
+                                };
+                                const type = contentType(file.path);
+                                if (type) {
+                                    payload.contentType = type;
+                                }
+
+                                return awsClient.upload(payload);
                             };
 
                             return Promise.all([
