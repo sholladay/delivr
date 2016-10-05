@@ -31,7 +31,7 @@
   "dependencies": {
     "build-data": "^0.3.1",
     "build-dir": "^0.7.1",
-    "build-files": "^0.1.1",
+    "build-files": "^0.2.0",
     "scube": "^0.1.0"
   },
   "devDependencies": {
