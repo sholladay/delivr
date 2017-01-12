@@ -10,7 +10,7 @@ const maxAge = require('./lib/max-age');
 
 const delivr = {};
 
-delivr.prepare = (option) => {
+delivr.prepare = async (option) => {
     const config = Object.assign({}, option);
     const cwd = config.cwd = path.resolve(config.cwd || '');
 
@@ -24,52 +24,48 @@ delivr.prepare = (option) => {
         bucket : config.bucket
     });
 
-    return buildData(config).then((data) => {
-        const buildConfig = Object.assign({ cwd }, data);
+    const buildConf = Object.assign({ cwd }, await buildData(config));
 
-        return buildDir.prepare(buildConfig).then((dir) => {
-            return {
-                path : dir.path,
-                finalize() {
-                    if (!willDeploy) {
-                        return dir.finalize();
-                    }
+    const dir = await buildDir.prepare(buildConf);
 
-                    return dir.finalize()
-                        .then(() => {
-                            return buildFiles.latest(buildConfig);
-                        })
-                        .then((files) => {
-                            const uploadFile = (file) => {
-                                const payload = {
-                                    key          : file.path,
-                                    body         : file.content,
-                                    aCL          : 'public-read',
-                                    cacheControl : 'public, max-age=' + maxAge(file.path)
-                                };
-                                const type = contentType(file.path);
-                                if (type) {
-                                    payload.contentType = type;
-                                }
+    return {
+        path : dir.path,
+        async finalize() {
+            await dir.finalize();
 
-                                return awsClient.upload(payload);
-                            };
+            if (!willDeploy) {
+                return;
+            }
 
-                            return Promise.all([
-                                awsClient.deleteDir({
-                                    prefix : path.posix.join(data.branch, data.version)
-                                }),
-                                awsClient.deleteDir({
-                                    prefix : path.posix.join(data.branch, 'latest')
-                                })
-                            ]).then(() => {
-                                return Promise.all(files.map(uploadFile));
-                            });
-                        });
+            const files = await buildFiles.latest(buildConf);
+
+            const uploadFile = (file) => {
+                const payload = {
+                    key          : file.path,
+                    body         : file.content,
+                    aCL          : 'public-read',
+                    cacheControl : 'public, max-age=' + maxAge(file.path)
+                };
+                const type = contentType(file.path);
+                if (type) {
+                    payload.contentType = type;
                 }
+
+                return awsClient.upload(payload);
             };
-        });
-    });
+
+            await Promise.all([
+                awsClient.deleteDir({
+                    prefix : path.posix.join(buildConf.branch, buildConf.version)
+                }),
+                awsClient.deleteDir({
+                    prefix : path.posix.join(buildConf.branch, 'latest')
+                })
+            ]);
+
+            return Promise.all(files.map(uploadFile));
+        }
+    };
 };
 
 module.exports = delivr;

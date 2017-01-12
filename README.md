@@ -26,16 +26,15 @@ const delivr = require('delivr');
 Run the build.
 
 ```js
-delivr.prepare().then((build) => {
-    // Put stuff in here:
-    console.log('Temp dir:', build.path);
+const build = await delivr.prepare();
+// Put stuff in here:
+console.log('Temp dir:', build.path);
 
-    // ... some time later ...
+// ... some time later ...
 
-    // Move the temp dir to its permanent home, set up symlinks,
-    // and upload the files on disk to S3.
-    return build.finalize();
-});
+// Move the temp dir to its permanent home, set up symlinks,
+// and upload the files on disk to S3.
+await build.finalize();
 ```
 
 ## API
