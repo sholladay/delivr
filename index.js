@@ -5,7 +5,7 @@ const buildFiles = require('build-files');
 const buildDir = require('build-dir');
 const buildData = require('build-data');
 const Scube = require('scube');
-const contentType = require('./lib/content-type');
+const mimeTypes = require('mime-types');
 const maxAge = require('./lib/max-age');
 
 const delivr = {};
@@ -46,7 +46,7 @@ delivr.prepare = async (option) => {
                     aCL          : 'public-read',
                     cacheControl : 'public, max-age=' + maxAge(file.path)
                 };
-                const type = contentType(file.path);
+                const type = mimeTypes.contentType(path.extname(file.path));
                 if (type) {
                     payload.contentType = type;
                 }
