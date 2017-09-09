@@ -1,6 +1,6 @@
 {
     "name": "delivr",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Build your code and ship it to S3",
     "homepage": "https://github.com/sholladay/delivr",
     "main": "index.js",
