@@ -12,7 +12,8 @@ const delivr = {};
 
 delivr.prepare = async (option) => {
     const config = Object.assign({}, option);
-    const cwd = config.cwd = path.resolve(config.cwd || '');
+    const cwd = path.resolve(config.cwd || '');
+    config.cwd = cwd;
 
     if (!config.bucket) {
         throw new Error('A bucket name is required to upload build files.');
