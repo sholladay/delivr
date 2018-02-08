@@ -2,12 +2,18 @@
 
 > Build your code and ship it to S3
 
+This is a multi-version release and deployment system, optimized for client-side applications.
+
+Your builds are locally stored during development and automatically sent to Amazon S3 in CI. Your git branch is used to namespace each build and versioning is handled gracefully, with immutable, meaningful version numbers derived from package.json and your git repository state.
+
+All branches are treated equally, all versions are kept around, and symlinks for the `latest` build of a given branch are provided. This makes both development and release extremely simple. Your app server can release a build simply by deciding which branch it wants to point to. And it can either use the `latest` build of that branch or a specific version. Because builds are immutable, they are cached for long periods of time, and rollbacks are easy.
+
 ## Why?
 
- - Easy to set up and configure.
- - Encourages cache-safe URLs.
- - Provides both versioned and `latest` copies.
+ - No more complicated, untested, handwritten release scripts!
+ - [Smart versioning](https://github.com/sholladay/build-version) that works well across environments.
  - Composable with other build tools.
+ - Easy to set up and configure.
 
 ## Install
 
@@ -17,24 +23,26 @@ npm install delivr --save
 
 ## Usage
 
-Get it into your program.
+First, `delivr.prepare()` makes a secure temporary directory for you to put your build files in. When you are done, just call `build.finalize()` and the directory will be deployed to `build/<branch>/<version>`, locally and (if in CI) to S3.
 
 ```js
+const fs = require('fs');
+const util = require('util');
 const delivr = require('delivr');
-```
 
-Run the build.
+const writeFile = util.promisify(fs.writeFile);
 
-```js
-const build = await delivr.prepare();
-// Put stuff in here:
-console.log('Temp dir:', build.path);
+const run = async () => {
+    const build = await delivr.prepare();
+    console.log('Temporary build directory:', build.path);
 
-// ... some time later ...
+    await writeFile(path.join(build.path, 'hello.txt'), 'Hello, world!');
 
-// Move the temp dir to its permanent home, set up symlinks,
-// and upload the files on disk to S3.
-await build.finalize();
+    // Move the temp dir to its permanent home, set up symlinks,
+    // and upload the files on disk to S3.
+    await build.finalize();
+};
+run();
 ```
 
 ## API
